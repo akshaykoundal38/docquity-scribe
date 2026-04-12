@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const InputPanel = () => {
+interface InputPanelProps {
+  onProcess: (notes: string) => void;
+  isProcessing: boolean;
+}
+
+const InputPanel = ({ onProcess, isProcessing }: InputPanelProps) => {
   const [isRecording, setIsRecording] = useState(false);
   const [notes, setNotes] = useState("");
 
@@ -46,8 +51,20 @@ const InputPanel = () => {
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <Button className="w-full py-5 text-sm font-semibold" size="lg">
-          Process & Anonymize Case
+        <Button
+          className="w-full py-5 text-sm font-semibold"
+          size="lg"
+          disabled={isProcessing || !notes.trim()}
+          onClick={() => onProcess(notes)}
+        >
+          {isProcessing ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" />
+              Processing...
+            </>
+          ) : (
+            "Process & Anonymize Case"
+          )}
         </Button>
       </CardContent>
     </Card>
