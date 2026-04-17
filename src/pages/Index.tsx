@@ -30,22 +30,22 @@ const Index = () => {
     setSoap(null);
     setLiterature([]);
     try {
-      const res = await fetch("http://localhost:5678/webhook/process-case", {
+      const res = await fetch("https://screen-roman-arkansas-moss.trycloudflare.com/webhook-test/process-case", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ notes }),
+        body: JSON.stringify({ transcript: notes }),
       });
       const data = await res.json();
       setSoap(data.soap);
 
       // Fetch literature
-      if (data.keywords) {
+      if (data.soap?.assessment || data.soap?.Assessment) {
         setIsLoadingLit(true);
         try {
-          const litRes = await fetch("http://localhost:5678/webhook/get-literature", {
+          const litRes = await fetch("https://screen-roman-arkansas-moss.trycloudflare.com/webhook-test/get-literature", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ keywords: data.keywords }),
+            body: JSON.stringify({ query: data.soap.assessment ?? data.soap.Assessment }),
           });
           const litData = await litRes.json();
           setLiterature(litData.recommendations || litData);
