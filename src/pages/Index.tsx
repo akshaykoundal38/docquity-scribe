@@ -30,7 +30,7 @@ const Index = () => {
     setSoap(null);
     setLiterature([]);
     try {
-      const res = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook-test/process-case", {
+      const res = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook/process-case", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript: notes }),
@@ -42,7 +42,7 @@ const Index = () => {
       if (data.soap?.assessment || data.soap?.Assessment) {
         setIsLoadingLit(true);
         try {
-          const litRes = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook-test/get-literature", {
+          const litRes = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook/get-literature", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ query: data.soap.assessment ?? data.soap.Assessment }),
