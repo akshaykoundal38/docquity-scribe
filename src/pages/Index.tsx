@@ -32,7 +32,7 @@ const Index = () => {
     try {
       const res = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook/process-case", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({ transcript: notes }),
       });
       const data = await res.json();
@@ -44,7 +44,7 @@ const Index = () => {
         try {
           const litRes = await fetch("https://mounting-known-realistic-pending.trycloudflare.com/webhook/get-literature", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
             body: JSON.stringify({ query: data.soap.assessment ?? data.soap.Assessment }),
           });
           const litData = await litRes.json();
