@@ -49,14 +49,16 @@ const Index = () => {
           });
           const litData = await litRes.json();
           setLiterature(litData.recommendations || litData);
-        } catch {
-          console.error("Failed to fetch literature");
+        } catch (error: any) {
+          console.log("Exact error:", JSON.stringify(error), error?.message, error?.stack);
+          alert("Error: " + error?.message);
         } finally {
           setIsLoadingLit(false);
         }
       }
-    } catch {
-      console.error("Failed to process case");
+    } catch (error: any) {
+      console.log("Exact error:", JSON.stringify(error), error?.message, error?.stack);
+      alert("Error: " + error?.message);
     } finally {
       setIsProcessing(false);
     }
