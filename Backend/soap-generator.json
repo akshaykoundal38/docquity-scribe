@@ -44,9 +44,9 @@
               "value": "application/json"
             },
             {
-              "name": "Authorization",
-              "value": `Bearer ${process.env.GROQ_API_KEY}`
-            }
+  "name": "Authorization",
+  "value": "=Bearer {{ $env.GROQ_API_KEY }}"
+}
           ]
         },
         "sendBody": true,
