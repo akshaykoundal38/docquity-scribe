@@ -3,6 +3,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import InputPanel from "@/components/InputPanel";
 import OutputPanel from "@/components/OutputPanel";
+import { toast } from "sonner";
 
 export interface SoapData {
   Subjective: string;
@@ -46,6 +47,9 @@ const Index = () => {
           }
         : null;
       setSoap(soapData);
+      if (soapData) {
+        toast.success("SOAP note generated successfully");
+      }
 
       // Fetch literature
       if (soapData?.Assessment) {
