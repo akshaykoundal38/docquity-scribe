@@ -34,8 +34,16 @@ const OutputPanel = ({ soap, literature, isLoadingLit }: OutputPanelProps) => {
             ))}
           </div>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-sm text-muted-foreground">
-            Process a case to see the SOAP note here.
+          <div className="flex-1 flex flex-col items-center justify-center text-center px-6 py-12 gap-3">
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
+              <Pencil className="h-5 w-5 text-primary" />
+            </div>
+            <p className="text-sm font-medium text-foreground">
+              Your structured note will appear here
+            </p>
+            <p className="text-xs text-muted-foreground max-w-xs">
+              Record or paste clinical notes, then process the case to generate a SOAP note.
+            </p>
           </div>
         )}
 
