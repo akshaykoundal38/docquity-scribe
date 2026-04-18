@@ -35,17 +35,26 @@ const Index = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript: notes }),
       });
-      const data = await res.json();
-      setSoap(data.soap);
+      const raw = await res.json();
+      const payload = Array.isArray(raw) ? raw[0] : raw;
+      const soapData = payload?.soap
+        ? {
+            Subjective: payload.soap.subjective ?? payload.soap.Subjective ?? "",
+            Objective: payload.soap.objective ?? payload.soap.Objective ?? "",
+            Assessment: payload.soap.assessment ?? payload.soap.Assessment ?? "",
+            Plan: payload.soap.plan ?? payload.soap.Plan ?? "",
+          }
+        : null;
+      setSoap(soapData);
 
       // Fetch literature
-      if (data.soap?.assessment || data.soap?.Assessment) {
+      if (soapData?.Assessment) {
         setIsLoadingLit(true);
         try {
           const litRes = await fetch("https://starts-ran-municipality-mph.trycloudflare.com/webhook/get-literature", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query: data.soap.assessment ?? data.soap.Assessment }),
+            body: JSON.stringify({ query: soapData.Assessment }),
           });
           const litData = await litRes.json();
           setLiterature(litData.recommendations || litData);
