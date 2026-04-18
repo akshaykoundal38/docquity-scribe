@@ -54,7 +54,7 @@ const Index = () => {
           const litRes = await fetch("https://starts-ran-municipality-mph.trycloudflare.com/webhook/get-literature", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ query: data.soap.assessment ?? data.soap.Assessment }),
+            body: JSON.stringify({ query: soapData.Assessment }),
           });
           const litData = await litRes.json();
           setLiterature(litData.recommendations || litData);
