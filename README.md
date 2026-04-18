@@ -28,7 +28,11 @@ The system is programmed to detect and swap patient names and sensitive identifi
 ### 📊 Smart SOAP Structuring
 The AI doesn't just "summarize"; it categorizes clinical data points (Vitals, Symptoms, Diagnosis, Treatment Plan) into the correct SOAP quadrants.
 * **Example:** It recognizes that "BP 140/90" is an **Objective** finding, while "Patient feels dizzy" is a **Subjective** symptom.
+## 🧠 Technical Decisions & "The Why"
 
+* **Why Decoupled Architecture?** I separated the React frontend from the n8n backend to simulate a high-security environment. This allows for modular updates without taking the whole system down.
+* **Why Groq + Llama 3.3?** Speed is critical in healthcare. By using Groq's LPUs, I achieved sub-2-second inference times, ensuring doctors aren't left waiting for documentation.
+* **Why Web Speech API?** Transcription happens locally in the browser to reduce latency and keep sensitive audio data off the server until it's converted to text.
 ---
 
 ## 🚀 Future Roadmap
