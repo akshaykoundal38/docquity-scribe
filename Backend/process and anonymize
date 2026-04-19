@@ -1,0 +1,151 @@
+{
+  "name": "CaseScribe - Process & Anonymize",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "process-case",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Headers",
+                "value": "Content-Type, Authorization, Accept"
+              },
+              {
+                "name": "Access-Control-Allow-Methods",
+                "value": "GET, POST, OPTIONS"
+              }
+            ]
+          }
+        }
+      },
+      "id": "dc88f67b-e127-4fc9-9872-2219e68f851d",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        272,
+        32
+      ],
+      "webhookId": "e9e1d011-fa43-419e-baee-485a4f122a62"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer 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"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"llama-3.3-70b-versatile\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a medical scribe assistant. Anonymize clinical notes by replacing patient names with [PATIENT], dates with [DATE], locations with [LOCATION], doctor names with [PHYSICIAN]. Then structure into SOAP format. Return only valid JSON with these fields: anonymized_raw, soap containing subjective objective assessment plan as strings, keywords as array of 3 strings, specialty as string.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"={{ 'Process these clinical notes: ' + $json.body.transcript }}\"\n    }\n  ],\n  \"temperature\": 0.3,\n  \"max_tokens\": 2000\n}",
+        "options": {}
+      },
+      "id": "874fb7b3-0f3a-4475-a7ae-99a7686d8b90",
+      "name": "Claude - SOAP Generator",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        496,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\n// Groq API response format\nconst rawText = response.choices[0].message.content;\n\nlet parsed;\ntry {\n  const jsonMatch = rawText.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch[0]);\n} catch(e) {\n  parsed = {\n    anonymized_raw: rawText,\n    soap: {\n      subjective: 'Could not parse - please try again',\n      objective: '',\n      assessment: '',\n      plan: ''\n    },\n    keywords: []\n  };\n}\n\nreturn [{ json: parsed }];"
+      },
+      "id": "32ea9cc2-0a73-4e2b-890d-9d7224bb184b",
+      "name": "Parse SOAP Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        32
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a6b4d8fd-e4b2-4a3e-a372-fcb9983a900b",
+      "name": "Send Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        944,
+        32
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Claude - SOAP Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude - SOAP Generator": {
+      "main": [
+        [
+          {
+            "node": "Parse SOAP Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse SOAP Response": {
+      "main": [
+        [
+          {
+            "node": "Send Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "6657fd97-8c24-45af-8205-9c27f5113766",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d08a4ee1f7bed1e7ce223dd81eb764c005ec30963c78f87d89222f5c1b411922"
+  },
+  "id": "GpRrZULjm6pos3Dx",
+  "tags": []
+}
