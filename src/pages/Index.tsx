@@ -34,7 +34,10 @@ const Index = () => {
     try {
       const res = await fetch("https://mule-enzyme-unbend.ngrok-free.dev/webhook/process-case", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true",
+        },
         body: JSON.stringify({ transcript: notes }),
       });
       const raw = await res.json();
@@ -58,7 +61,10 @@ const Index = () => {
         try {
           const litRes = await fetch("https://mule-enzyme-unbend.ngrok-free.dev/webhook/get-literature", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              "ngrok-skip-browser-warning": "true",
+            },
             body: JSON.stringify({ query: soapData.Assessment }),
           });
           const litData = await litRes.json();
