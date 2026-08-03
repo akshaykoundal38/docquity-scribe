@@ -41,15 +41,31 @@ const Index = () => {
         body: JSON.stringify({ transcript: notes }),
       });
       const raw = await res.json();
-      const payload = Array.isArray(raw) ? raw[0] : raw;
-      const soapData = payload?.soap
-        ? {
-            Subjective: payload.soap.subjective ?? payload.soap.Subjective ?? "",
-            Objective: payload.soap.objective ?? payload.soap.Objective ?? "",
-            Assessment: payload.soap.assessment ?? payload.soap.Assessment ?? "",
-            Plan: payload.soap.plan ?? payload.soap.Plan ?? "",
-          }
-        : null;
+      // Unwrap: array -> first item, then optional .output / .data / .json / .soap wrappers
+      let payload: any = Array.isArray(raw) ? raw[0] : raw;
+      if (payload?.output) payload = payload.output;
+      if (Array.isArray(payload)) payload = payload[0];
+      if (payload?.data) payload = payload.data;
+      if (payload?.json) payload = payload.json;
+      if (typeof payload === "string") {
+        try {
+          payload = JSON.parse(payload);
+        } catch {
+          /* keep as string */
+        }
+      }
+      const src: any = payload?.soap ?? payload ?? {};
+      const pick = (k: string) =>
+        src[k] ?? src[k.charAt(0).toUpperCase() + k.slice(1)] ?? "";
+      const soapData =
+        pick("subjective") || pick("objective") || pick("assessment") || pick("plan")
+          ? {
+              Subjective: pick("subjective"),
+              Objective: pick("objective"),
+              Assessment: pick("assessment"),
+              Plan: pick("plan"),
+            }
+          : null;
       setSoap(soapData);
       if (soapData) {
         toast.success("SOAP note generated successfully");
