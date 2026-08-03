@@ -3,6 +3,7 @@ import DashboardHeader from "@/components/DashboardHeader";
 import DashboardSidebar from "@/components/DashboardSidebar";
 import InputPanel from "@/components/InputPanel";
 import OutputPanel from "@/components/OutputPanel";
+import SoapScribeComponent from "@/components/SoapScribeComponent";
 import { toast } from "sonner";
 
 export interface SoapData {
@@ -83,9 +84,12 @@ const Index = () => {
       <div className="flex flex-1 overflow-hidden">
         <DashboardSidebar />
         <main className="flex-1 p-6 overflow-auto">
-          <div className="flex gap-6 h-full max-w-7xl mx-auto">
-            <InputPanel onProcess={handleProcess} isProcessing={isProcessing} />
-            <OutputPanel soap={soap} literature={literature} isLoadingLit={isLoadingLit} />
+          <div className="max-w-7xl mx-auto space-y-6">
+            <div className="flex gap-6">
+              <InputPanel onProcess={handleProcess} isProcessing={isProcessing} />
+              <OutputPanel soap={soap} literature={literature} isLoadingLit={isLoadingLit} />
+            </div>
+            <SoapScribeComponent />
           </div>
         </main>
       </div>
