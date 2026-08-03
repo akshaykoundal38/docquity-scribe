@@ -1,5 +1,5 @@
 export const SOAP_SCRIBE_URL =
-  "http://localhost:5678/webhook/soap-scribe";
+  "https://mule-enzyme-unbend.ngrok-free.dev/webhook/soap-scribe";
 
 export interface SoapNote {
   subjective: string;
