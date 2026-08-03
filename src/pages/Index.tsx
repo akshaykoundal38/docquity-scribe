@@ -32,7 +32,7 @@ const Index = () => {
     setSoap(null);
     setLiterature([]);
     try {
-      const res = await fetch("https://opportunities-sought-poet-night.trycloudflare.com/webhook/process-case", {
+      const res = await fetch("http://localhost:5678/webhook/process-case", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transcript: notes }),
@@ -56,7 +56,7 @@ const Index = () => {
       if (soapData?.Assessment) {
         setIsLoadingLit(true);
         try {
-          const litRes = await fetch("https://opportunities-sought-poet-night.trycloudflare.com/webhook/get-literature", {
+          const litRes = await fetch("http://localhost:5678/webhook/get-literature", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ query: soapData.Assessment }),
