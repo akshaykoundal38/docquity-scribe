@@ -1,5 +1,5 @@
 export const SOAP_SCRIBE_URL =
-  "https://a1b2-34-56-78-90.ngrok-free.app/webhook/soap-scribe";
+  "http://localhost:5678/webhook/soap-scribe";
 
 export interface SoapNote {
   subjective: string;
